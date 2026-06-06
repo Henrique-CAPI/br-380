@@ -5,6 +5,14 @@ import { LOGOS } from "./logos";
 import { STRINGS } from "./i18n";
 import "./App.css";
 
+// Vite injects BASE_URL ("/" in dev, "/br-380/" on GitHub Pages). LOGOS
+// holds bare paths like "logos/foo.webp"; prepend BASE_URL to make absolute.
+const BASE = import.meta.env.BASE_URL;
+function logoUrl(name) {
+  const path = LOGOS[name];
+  return path ? `${BASE}${path}` : null;
+}
+
 function shuffle(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -120,7 +128,7 @@ function LanguageToggle({ lang, setLang }) {
 }
 
 function TeamAnnouncement({ team, t }) {
-  const logo = LOGOS[team.name];
+  const logo = logoUrl(team.name);
   return (
     <motion.div
       className="announcement"
@@ -216,7 +224,7 @@ function PlayerCard({ player, can, onClick, accent, index, t }) {
 }
 
 function PlayerGrid({ team, roster, onPick, t }) {
-  const logo = LOGOS[team.name];
+  const logo = logoUrl(team.name);
   return (
     <motion.div
       className="grid"
@@ -398,7 +406,7 @@ function ResultScreen({ result, roster, teamRating, onResim, onReset, t, lang })
 export default function App() {
   const [lang, setLangState] = useState(() => {
     const stored = typeof localStorage !== "undefined" ? localStorage.getItem("lang") : null;
-    return stored === "pt" || stored === "en" ? stored : "en";
+    return stored === "pt" || stored === "en" ? stored : "pt";
   });
   const t = STRINGS[lang];
 
@@ -513,8 +521,8 @@ export default function App() {
         className="stage"
         style={{
           "--bg-logo":
-            !showIntro && currentTeam && LOGOS[currentTeam.name]
-              ? `url("${LOGOS[currentTeam.name]}")`
+            !showIntro && currentTeam && logoUrl(currentTeam.name)
+              ? `url("${logoUrl(currentTeam.name)}")`
               : "none",
           "--team-accent": currentTeam ? currentTeam.accent : "#2d6cdf",
         }}

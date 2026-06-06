@@ -138,7 +138,7 @@ async function main() {
         await downloadFile(url, savePath);
       }
       const size = (await import("fs")).statSync(savePath).size;
-      map[club] = `/logos/${slug(club)}.${finalExt}`;
+      map[club] = `logos/${slug(club)}.${finalExt}`;
       console.error(`  ✓ ${(size / 1024).toFixed(1)} KB → ${finalExt}`);
     } catch (e) {
       console.error(`  ERROR: ${e.message}`);
